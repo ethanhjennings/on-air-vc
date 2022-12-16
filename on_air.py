@@ -6,8 +6,9 @@ import time
 import requests
 
 DISPLAY_NAME = '' # Friendly display name: "Noam (work)" for example
-START_MEETING_URL = '' # URL that will be called when a new meeting starts
-END_MEETING_URL = '' # URL that will be called when a meeting ends
+START_MEETING_URL = '' + DISPLAY_NAME # URL that will be called when a new meeting starts
+END_MEETING_URL = '' + DISPLAY_NAME # URL that will be called when a meeting ends
+CHECK_INTERVAL = 5
 
 def make_request(url, retries=5):
     print("Making request...")
@@ -53,7 +54,7 @@ def in_meeting_mac():
         return False
 
 def in_meeting_windows():
-    p = subprocess.Popen(['tasklist', '/fo', 'table', '/v', '/fi', 'imagename eq CptHost.exe'], stdout=subprocess.PIPE)
+    p = subprocess.Popen(['tasklist', '/fo', 'table', '/v', '/fi', 'imagename eq CptHost.exe'], shell=True, stdout=subprocess.PIPE)
     output = p.communicate()[0]
 
     for line in str(output).splitlines():
@@ -88,4 +89,5 @@ if __name__ == '__main__':
             on_end_meeting(os_name)
 
         last_state = is_in_meeting
-        time.sleep(1)
+        time.sleep(CHECK_INTERVAL)
+        sys.stdout.flush()
