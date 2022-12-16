@@ -6,22 +6,25 @@ import time
 import requests
 
 DISPLAY_NAME = '' # Friendly display name: "Noam (work)" for example
-START_MEETING_URL = 'http://{insert url here!}'
-END_MEETING_URL = 'http://{insert url here!}'
+START_MEETING_URL = '' # URL that will be called when a new meeting starts
+END_MEETING_URL = '' # URL that will be called when a meeting ends
 
 def make_request(url, retries=5):
     print("Making request...")
     tries = 0
     while tries < 5:
-        r = requests.get(url)
-        if r.status_code == 200:
-            print("Success!")
-            return
-        else:
-            print("Request failed... retrying...", file=sys.stderr)
-            tries += 1
+        try:
+            r = requests.get(url)
+            if r.status_code == 200:
+                print("Success!")
+                return
+            else:
+                print("Request had bad response retrying...", file=sys.stderr)
+        except Exception:
+            print("Unable to make request retrying...", file=sys.stderr)
+        tries += 1
+        time.sleep(30)
     print("Giving up!", file=sys.stderr)
-
 
 def on_start_meeting(os_name):
     make_request(START_MEETING_URL)
@@ -50,7 +53,13 @@ def in_meeting_mac():
         return False
 
 def in_meeting_windows():
-    pass
+    p = subprocess.Popen(['tasklist', '/fo', 'table', '/v', '/fi', 'imagename eq CptHost.exe'], stdout=subprocess.PIPE)
+    output = p.communicate()[0]
+
+    for line in str(output).splitlines():
+        if line.find('CptHost.exe') > -1:
+            return True
+    return False
 
 def get_os():
     os_name = platform.system()
