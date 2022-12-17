@@ -2,8 +2,8 @@
 Script to detect when zoom is open on your computer! Compatible with both Windows and macOS, but only supports Zoom right now.
 
 ## Installation (Mac)
-- Edit `config.py` with the urls/settings you want
-- Clone this repo then run this command inside to setup the application:
+- Clone this repo and edit `config.py` with the urls and other settings you want.
+- Run this command from inside the repo to setup the application:
 ```
 mkdir /Applications/on_air/; cp -r * /Applications/on_air/
 ```
