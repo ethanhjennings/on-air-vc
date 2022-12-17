@@ -1,5 +1,5 @@
 # On Air (Video calls)
-Script to detect when zoom is open on your computer! Compatible with both Windows and macOS, but only supports Zoom right now.
+Background application to detect when zoom is open on your computer and make a web requests for home/computer automation! Compatible with both Windows and macOS, but only supports Zoom right now.
 
 ## Installation (Mac)
 - Clone this repo and edit `config.py` with the urls and other settings you want.
