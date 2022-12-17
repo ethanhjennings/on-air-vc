@@ -12,9 +12,9 @@ mkdir /Applications/on_air/; cp -r * /Applications/on_air/
 cd /Applications/on_air/; python3 -m venv venv; source venv/bin/activate; pip3 install -r requirements.txt; deactivate
 ```
 
-- Copy the contents of the .plist file and start the daemon with this commands:
+- Copy the contents of the .plist file and start the daemon with this commands: (Note: this one requires `sudo` access)
 ```
-cp me.ethanj.onair.plist /Library/LaunchAgents; launchctl load /Library/LaunchAgents/me.ethanj.onair.plist
+sudo cp me.ethanj.onair.plist /Library/LaunchAgents; launchctl load /Library/LaunchAgents/me.ethanj.onair.plist
 ```
 
 ## Installation (Windows)
