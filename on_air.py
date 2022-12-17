@@ -1,4 +1,5 @@
 import platform
+import re
 import subprocess
 import sys
 import time
@@ -8,7 +9,7 @@ import requests
 DISPLAY_NAME = '' # Friendly display name: "Noam (work)" for example
 START_MEETING_URL = '' + DISPLAY_NAME # URL that will be called when a new meeting starts
 END_MEETING_URL = '' + DISPLAY_NAME # URL that will be called when a meeting ends
-CHECK_INTERVAL = 5
+CHECK_INTERVAL = 5 # Check interval in seconds
 
 def make_request(url, retries=5):
     print("Making request...")
@@ -40,27 +41,16 @@ def in_meeting(os_name):
         return in_meeting_windows()
 
 def in_meeting_mac():
-    p1 = subprocess.Popen(['ps', 'x'], stdout=subprocess.PIPE)
+    p = subprocess.Popen(['ps', 'x'], stdout=subprocess.PIPE)
+    output, err = p.communicate()
 
-    # zoom meeting ids have 9-10 digits, this may need to be updated in the future!
-    p2 = subprocess.Popen(['grep', '-E', '\-key [0-9]{9,10}'], stdin=p1.stdout, stdout=subprocess.PIPE)
-    p1.stdout.close()
-    output = p2.communicate()[0] 
-    
-    if output:
-        meeting_id = output.split()[-1].decode()
-        return True
-    else:
-        return False
+    return str(output).find("CptHost.app") > -1
 
 def in_meeting_windows():
     p = subprocess.Popen(['tasklist', '/fo', 'table', '/v', '/fi', 'imagename eq CptHost.exe'], shell=True, stdout=subprocess.PIPE)
-    output = p.communicate()[0]
+    output, err = p.communicate()[0]
 
-    for line in str(output).splitlines():
-        if line.find('CptHost.exe') > -1:
-            return True
-    return False
+    return str(output).find("CptHost.exe") > -1
 
 def get_os():
     os_name = platform.system()
@@ -76,7 +66,10 @@ def get_os():
 
 if __name__ == '__main__':
     os_name = get_os() 
-    last_state = False
+
+    # Start with inverted so that it will trigger the first time
+    last_state = not in_meeting(os_name)
+
     while True:
         is_in_meeting = in_meeting(os_name)
 
@@ -89,5 +82,5 @@ if __name__ == '__main__':
             on_end_meeting(os_name)
 
         last_state = is_in_meeting
-        time.sleep(CHECK_INTERVAL)
         sys.stdout.flush()
+        time.sleep(CHECK_INTERVAL)

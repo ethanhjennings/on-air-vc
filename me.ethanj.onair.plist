@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+        <string>me.ethanj.onair</string>
+    <key>ProgramArguments</key>
+        <array>
+            <string>/bin/bash</string>
+            <string>-c</string>
+            <string>source venv/bin/activate; python3 on_air.py</string>
+        </array>
+    <key>StandardOutPath</key>
+        <string>log.out</string>
+    <key>StandardErrorPath</key>
+        <string>log.out</string>
+    <key>WorkingDirectory</key>
+        <string>/Applications/on_air/</string>
+    <key>KeepAlive</key>
+        <true/>
+</dict>
+</plist>
