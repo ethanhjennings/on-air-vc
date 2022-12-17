@@ -5,11 +5,11 @@ import sys
 import time
 
 import requests
+import config
 
-DISPLAY_NAME = '' # Friendly display name: "Noam (work)" for example
-START_MEETING_URL = '' + DISPLAY_NAME # URL that will be called when a new meeting starts
-END_MEETING_URL = '' + DISPLAY_NAME # URL that will be called when a meeting ends
-CHECK_INTERVAL = 5 # Check interval in seconds
+'''
+Script that continously checks for Zoom running and makes a url request when a meeting starts or ends.
+'''
 
 def make_request(url, retries=5):
     print("Making request...")
@@ -29,10 +29,10 @@ def make_request(url, retries=5):
     print("Giving up!", file=sys.stderr)
 
 def on_start_meeting(os_name):
-    make_request(START_MEETING_URL)
+    make_request(config.START_MEETING_URL)
 
 def on_end_meeting(os_name):
-    make_request(END_MEETING_URL)
+    make_request(config.END_MEETING_URL)
 
 def in_meeting(os_name):
     if os_name == 'Darwin':
@@ -83,4 +83,4 @@ if __name__ == '__main__':
 
         last_state = is_in_meeting
         sys.stdout.flush()
-        time.sleep(CHECK_INTERVAL)
+        time.sleep(config.CHECK_INTERVAL)
